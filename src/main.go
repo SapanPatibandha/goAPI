@@ -21,10 +21,26 @@ var todos = []todo{
 func main() {
 
 	router := gin.Default()
-	router.GET("/todos", getAPIContent)
+	router.GET("/todos", getTODO)
+	router.POST("/todos", addTODO)
 	router.Run("localhost:9090")
 }
 
-func getAPIContent(context *gin.Context) {
+func getTODO(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, todos)
+}
+
+func addTODO(context *gin.Context) {
+	var newToDo todo
+
+	err := context.BindJSON(&newToDo)
+
+	if err != nil {
+		return
+	}
+
+	todos = append(todos, newToDo)
+
+	context.IndentedJSON(http.StatusCreated, newToDo)
+
 }
